@@ -7,7 +7,7 @@
 <meta name="x5-orientation" content="landscape">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>LAST Z · 末日射击幸存者</title>
+<title>LAST Z · 末日幸存者射击</title>
 <script src="./assets/vendor/three.min.js"></script>
 <script src="./assets/vendor/tailwindcss-browser.js"></script>
 <style>
@@ -112,7 +112,10 @@ html.portrait-blocked #rotateScreen{display:flex}
 .perkico{width:46px;height:46px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px}
 .mkill{font-family:var(--font-display);font-size:12px;opacity:.9}
 .screen-scroll{overflow-y:auto;overscroll-behavior:contain;padding:max(18px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left))}
-.account-chip{position:relative;z-index:3;pointer-events:auto;display:flex;align-items:center;gap:10px;padding:8px 10px 8px 14px;width:fit-content;max-width:min(430px,100%);margin:0 0 12px auto}
+.menu-topbar{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:8px;pointer-events:auto}
+.account-chip{display:flex;align-items:center;gap:10px;padding:8px 10px 8px 14px;width:fit-content;max-width:min(430px,100%);margin:0}
+.menu-topbar .sound-controls{margin:0;justify-content:flex-end;flex:0 0 auto}
+.menu-topbar .sound-toggle{min-width:104px;padding:7px 10px}
 .account-chip .btn{padding:7px 11px;font-size:11px;white-space:nowrap}
 .form-input{width:100%;border:1px solid rgba(125,220,255,.3);background:rgba(3,8,14,.88);color:#e8f7ff;padding:11px 13px;outline:none;font-size:15px;user-select:text}
 .form-input:focus{border-color:#7ce7ff;box-shadow:0 0 0 2px rgba(80,200,255,.12)}
@@ -129,7 +132,11 @@ html.portrait-blocked #rotateScreen{display:flex}
 @media(max-width:900px){
  #startScreen{align-items:flex-start}
  #startScreen>div{margin:auto 0;max-width:760px}
- .account-chip{margin:0 auto 14px;width:min(620px,100%);justify-content:space-between}
+ .menu-topbar{gap:9px}
+ .account-chip{width:auto;max-width:calc(100% - 245px);justify-content:space-between}
+ .menu-topbar .sound-controls{gap:5px}
+ .menu-topbar .sound-label{display:none}
+ .menu-topbar .sound-toggle{min-width:96px;padding:7px 8px}
  #playerHud{width:230px;padding:8px}
  #centerHud{left:calc(50% + 24px);width:min(440px,calc(100vw - 370px));min-width:280px;padding:6px 8px}
  #centerHud .hud-head{gap:7px}
@@ -147,8 +154,18 @@ html.portrait-blocked #rotateScreen{display:flex}
 }
 @media(max-height:620px){
  #startScreen .hero-copy,#startScreen .control-grid{display:none}
- #startScreen h1{font-size:54px}
- #startScreen .menu-gap{margin-top:12px}
+ #startScreen .menu-topbar{margin-bottom:4px}
+ #startScreen h1{font-size:54px;margin-top:0}
+ #startScreen .menu-gap{margin-top:10px}
+ #startScreen .mode-card{min-height:96px;padding:12px}
+ #startScreen #stagePickerWrap{margin-top:8px}
+ #startScreen .menu-actions{margin-top:12px}
+ #startScreen .menu-summary{margin-top:8px}
+}
+@media(max-width:700px){
+ #startScreen .menu-topbar{align-items:flex-start}
+ #startScreen .account-chip{max-width:calc(100% - 202px)}
+ #startScreen .menu-topbar .sound-toggle{min-width:auto;padding:7px 8px}
 }
 ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:rgba(120,200,255,.35)}
 </style>
@@ -228,9 +245,12 @@ html.portrait-blocked #rotateScreen{display:flex}
 </div>
 <div id="startScreen" class="absolute inset-0 z-30 flex items-center justify-center screen-scroll" style="background:radial-gradient(ellipse at center,rgba(10,18,28,.86),rgba(2,4,8,.97))">
  <div class="text-center px-6 max-w-[960px] w-full relative">
-  <div class="account-chip panel clipx text-left">
-   <div class="min-w-0"><div class="ttl text-[9px] text-cyan-300/70">当前档案</div><div class="flex gap-3 items-baseline"><span id="menuAccountName" class="ttl text-sm text-white truncate">未登录</span><span id="menuAccountLevel" class="text-[11px] text-amber-200">LV.1</span><span id="menuWallet" class="text-[11px] text-emerald-300">物资 0 · 核心 0</span></div></div>
-   <div class="btn clipx" id="btnSwitchAccount">切换</div>
+  <div class="menu-topbar">
+   <div class="account-chip panel clipx text-left">
+    <div class="min-w-0"><div class="ttl text-[9px] text-cyan-300/70">当前档案</div><div class="flex gap-3 items-baseline"><span id="menuAccountName" class="ttl text-sm text-white truncate">未登录</span><span id="menuAccountLevel" class="text-[11px] text-amber-200">LV.1</span><span id="menuWallet" class="text-[11px] text-emerald-300">物资 0 · 核心 0</span></div></div>
+    <div class="btn clipx" id="btnSwitchAccount">切换</div>
+   </div>
+   <div class="sound-controls" aria-label="声音设置"><span class="sound-label">声音设置</span><button type="button" class="btn clipx sound-toggle" data-sound-toggle="sfx">🔊 音效：开</button><button type="button" class="btn clipx sound-toggle" data-sound-toggle="bgm">♫ BGM：开</button></div>
   </div>
   <div class="ttl text-[13px] text-red-400/80 tracking-[.6em] flick">SURVIVAL PROTOCOL · 2087</div>
   <h1 class="ttl text-6xl md:text-8xl font-black mt-2 leading-none" style="background:linear-gradient(180deg,#fff,#7fd8ff 45%,#1f6fa8);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 6px 26px rgba(60,180,255,.45))">LAST&nbsp;Z</h1>
@@ -242,18 +262,17 @@ html.portrait-blocked #rotateScreen{display:flex}
    <div class="panel clipx p-3"><div class="ttl text-cyan-300 text-[11px] mb-1">射击</div>鼠标左键 / 右摇杆拖出外圈</div>
    <div class="panel clipx p-3"><div class="ttl text-cyan-300 text-[11px] mb-1">技能</div>空格闪避 · G手雷</div>
   </div>
-  <div class="sound-controls mt-3" aria-label="声音设置"><span class="sound-label">声音设置</span><button type="button" class="btn clipx sound-toggle" data-sound-toggle="sfx">🔊 音效：开</button><button type="button" class="btn clipx sound-toggle" data-sound-toggle="bgm">♫ BGM：开</button></div>
   <div class="menu-gap mt-5 grid grid-cols-1 md:grid-cols-2 gap-3">
    <div class="mode-card clipx on" data-mode="stage"><div class="ttl text-amber-200 text-sm">关卡模式</div><div class="text-slate-300 text-[13px] mt-2">有限波次、明确目标和首次通关奖励。永久科技与武器解锁会带入战斗。</div><div class="text-[11px] text-emerald-300 mt-2" id="stageProgressTxt">关卡进度 0 / 6</div></div>
    <div class="mode-card clipx" data-mode="endless"><div class="ttl text-cyan-200 text-sm">无限流模式</div><div class="text-slate-300 text-[13px] mt-2">敌人持续增强，冲击个人最高波次与得分。战利品同样计入长期养成。</div><div class="text-[11px] text-amber-200 mt-2" id="endlessBestTxt">最高 0 波 · 0 分</div></div>
   </div>
   <div id="stagePickerWrap" class="mt-3 text-left"><div class="ttl text-[10px] text-slate-400 mb-2">选择任务</div><div id="stagePicker" class="flex gap-2 overflow-x-auto pb-2"></div><div id="stageDetail" class="text-[12px] text-slate-300/80 mt-1"></div></div>
-  <div class="mt-5 flex gap-3 justify-center flex-wrap">
+  <div class="menu-actions mt-5 flex gap-3 justify-center flex-wrap">
    <div class="btn clipx px-10 py-4 text-xl" id="btnStart">开始游戏</div>
    <div class="btn clipx px-6 py-4 text-base" id="btnGrowth">基地养成</div>
    <div class="btn clipx px-6 py-4 text-base" id="btnHow">玩法说明</div>
   </div>
-  <div class="mt-3 text-[12px] text-slate-500">账号总击杀 <span id="totalKillsTxt" class="text-amber-300">0</span> · 出击 <span id="totalRunsTxt" class="text-amber-300">0</span> · 通关 <span id="totalWinsTxt" class="text-amber-300">0</span></div>
+  <div class="menu-summary mt-3 text-[12px] text-slate-500">账号总击杀 <span id="totalKillsTxt" class="text-amber-300">0</span> · 出击 <span id="totalRunsTxt" class="text-amber-300">0</span> · 通关 <span id="totalWinsTxt" class="text-amber-300">0</span></div>
  </div>
 </div>
 <div id="accountScreen" class="absolute inset-0 z-[60] flex items-center justify-center screen-scroll" style="background:radial-gradient(ellipse at center,rgba(9,25,38,.98),rgba(1,3,7,.995))">

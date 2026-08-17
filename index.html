@@ -112,11 +112,17 @@ html.portrait-blocked #rotateScreen{display:flex}
 .perkico{width:46px;height:46px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px}
 .mkill{font-family:var(--font-display);font-size:12px;opacity:.9}
 .screen-scroll{overflow-y:auto;overscroll-behavior:contain;padding:max(18px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left))}
-.menu-topbar{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:8px;pointer-events:auto}
-.account-chip{display:flex;align-items:center;gap:10px;padding:8px 10px 8px 14px;width:fit-content;max-width:min(430px,100%);margin:0}
-.menu-topbar .sound-controls{margin:0;justify-content:flex-end;flex:0 0 auto}
-.menu-topbar .sound-toggle{min-width:104px;padding:7px 10px}
+.menu-brand{position:relative}
+.menu-title{position:relative;z-index:1}
+.menu-side{position:absolute;top:55%;z-index:3;transform:translateY(-50%);pointer-events:auto}
+.menu-profile{left:0}
+.menu-sound{right:0}
+.account-chip{display:flex;align-items:center;gap:10px;padding:8px 10px 8px 14px;width:fit-content;max-width:min(380px,32vw);margin:0}
+.menu-sound .sound-controls{margin:0;justify-content:flex-end;flex-wrap:nowrap}
+.menu-sound .sound-toggle{min-width:104px;padding:7px 10px}
 .account-chip .btn{padding:7px 11px;font-size:11px;white-space:nowrap}
+.menu-actions .btn{min-height:64px;padding:0 34px;display:inline-flex;align-items:center;justify-content:center;font-size:22px}
+.menu-actions #btnStart{min-width:168px;font-size:25px}
 .form-input{width:100%;border:1px solid rgba(125,220,255,.3);background:rgba(3,8,14,.88);color:#e8f7ff;padding:11px 13px;outline:none;font-size:15px;user-select:text}
 .form-input:focus{border-color:#7ce7ff;box-shadow:0 0 0 2px rgba(80,200,255,.12)}
 .mode-card{cursor:pointer;text-align:left;min-height:112px;padding:16px;border:1px solid rgba(120,180,220,.24);background:linear-gradient(145deg,rgba(14,23,35,.68),rgba(7,11,18,.6));transition:.16s}
@@ -132,11 +138,11 @@ html.portrait-blocked #rotateScreen{display:flex}
 @media(max-width:900px){
  #startScreen{align-items:flex-start}
  #startScreen>div{margin:auto 0;max-width:760px}
- .menu-topbar{gap:9px}
- .account-chip{width:auto;max-width:calc(100% - 245px);justify-content:space-between}
- .menu-topbar .sound-controls{gap:5px}
- .menu-topbar .sound-label{display:none}
- .menu-topbar .sound-toggle{min-width:96px;padding:7px 8px}
+ .account-chip{max-width:290px}
+ .menu-sound .sound-controls{gap:5px}
+ .menu-sound .sound-label{display:none}
+ .menu-sound .sound-toggle{min-width:96px;padding:7px 8px}
+ #startScreen h1{font-size:68px}
  #playerHud{width:230px;padding:8px}
  #centerHud{left:calc(50% + 24px);width:min(440px,calc(100vw - 370px));min-width:280px;padding:6px 8px}
  #centerHud .hud-head{gap:7px}
@@ -154,7 +160,6 @@ html.portrait-blocked #rotateScreen{display:flex}
 }
 @media(max-height:620px){
  #startScreen .hero-copy,#startScreen .control-grid{display:none}
- #startScreen .menu-topbar{margin-bottom:4px}
  #startScreen h1{font-size:54px;margin-top:0}
  #startScreen .menu-gap{margin-top:10px}
  #startScreen .mode-card{min-height:96px;padding:12px}
@@ -163,9 +168,11 @@ html.portrait-blocked #rotateScreen{display:flex}
  #startScreen .menu-summary{margin-top:8px}
 }
 @media(max-width:700px){
- #startScreen .menu-topbar{align-items:flex-start}
- #startScreen .account-chip{max-width:calc(100% - 202px)}
- #startScreen .menu-topbar .sound-toggle{min-width:auto;padding:7px 8px}
+ #startScreen .account-chip{max-width:210px;padding-left:10px;gap:6px}
+ #startScreen #menuWallet{display:none}
+ #startScreen .menu-sound .sound-toggle{min-width:auto;padding:7px 8px}
+ #startScreen .menu-actions .btn{min-height:56px;padding:0 22px;font-size:19px}
+ #startScreen .menu-actions #btnStart{min-width:140px;font-size:22px}
 }
 ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:rgba(120,200,255,.35)}
 </style>
@@ -245,16 +252,18 @@ html.portrait-blocked #rotateScreen{display:flex}
 </div>
 <div id="startScreen" class="absolute inset-0 z-30 flex items-center justify-center screen-scroll" style="background:radial-gradient(ellipse at center,rgba(10,18,28,.86),rgba(2,4,8,.97))">
  <div class="text-center px-6 max-w-[960px] w-full relative">
-  <div class="menu-topbar">
-   <div class="account-chip panel clipx text-left">
+  <div class="menu-brand">
+   <div class="menu-title">
+    <div class="ttl text-[13px] text-red-400/80 tracking-[.6em] flick">SURVIVAL PROTOCOL · 2087</div>
+    <h1 class="ttl text-6xl md:text-8xl font-black mt-2 leading-none" style="background:linear-gradient(180deg,#fff,#7fd8ff 45%,#1f6fa8);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 6px 26px rgba(60,180,255,.45))">LAST&nbsp;Z</h1>
+    <div class="ttl text-lg md:text-2xl text-red-300 redtxt mt-1 tracking-[.35em]">末 日 幸 存 者 射 击</div>
+   </div>
+   <div class="menu-side menu-profile"><div class="account-chip panel clipx text-left">
     <div class="min-w-0"><div class="ttl text-[9px] text-cyan-300/70">当前档案</div><div class="flex gap-3 items-baseline"><span id="menuAccountName" class="ttl text-sm text-white truncate">未登录</span><span id="menuAccountLevel" class="text-[11px] text-amber-200">LV.1</span><span id="menuWallet" class="text-[11px] text-emerald-300">物资 0 · 核心 0</span></div></div>
     <div class="btn clipx" id="btnSwitchAccount">切换</div>
-   </div>
-   <div class="sound-controls" aria-label="声音设置"><span class="sound-label">声音设置</span><button type="button" class="btn clipx sound-toggle" data-sound-toggle="sfx">🔊 音效：开</button><button type="button" class="btn clipx sound-toggle" data-sound-toggle="bgm">♫ BGM：开</button></div>
+   </div></div>
+   <div class="menu-side menu-sound"><div class="sound-controls" aria-label="声音设置"><span class="sound-label">声音设置</span><button type="button" class="btn clipx sound-toggle" data-sound-toggle="sfx">🔊 音效：开</button><button type="button" class="btn clipx sound-toggle" data-sound-toggle="bgm">♫ BGM：开</button></div></div>
   </div>
-  <div class="ttl text-[13px] text-red-400/80 tracking-[.6em] flick">SURVIVAL PROTOCOL · 2087</div>
-  <h1 class="ttl text-6xl md:text-8xl font-black mt-2 leading-none" style="background:linear-gradient(180deg,#fff,#7fd8ff 45%,#1f6fa8);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 6px 26px rgba(60,180,255,.45))">LAST&nbsp;Z</h1>
-  <div class="ttl text-lg md:text-2xl text-red-300 redtxt mt-1 tracking-[.35em]">末 日 幸 存 者 射 击</div>
   <p class="hero-copy mt-4 text-slate-300/80 text-[14px] leading-relaxed">建立幸存者档案，强化基地科技。推进六个关卡夺回城区，或进入无限尸潮挑战极限。</p>
   <div class="control-grid mt-4 grid grid-cols-2 md:grid-cols-4 gap-3 text-left text-[12px]">
    <div class="panel clipx p-3"><div class="ttl text-cyan-300 text-[11px] mb-1">移动</div>WASD / 左摇杆</div>
